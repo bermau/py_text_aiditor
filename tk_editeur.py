@@ -11,8 +11,8 @@ from tkinter import filedialog
 # https://stackoverflow.com/questions/16115378/tkinter-example-code-for-multiple-windows-why-wont-buttons-load-correctly
 class MapApp():  # Ne dérive pas de Tkinter
 
-    text = None
-    def __init__(self, master, files):
+    def __init__(self, tk_master, files):
+
         if files:
             self.files = files
             print(f"Les fichiers à traiter sont : ")
@@ -21,17 +21,23 @@ class MapApp():  # Ne dérive pas de Tkinter
         else:
             self.files = ["fichier 1", "fichier 2"]
 
-        self.master = master
-        self.master.title("Mon application graphique.")
-        self.tkframe = tk.Frame(self.master)  # Premier objet tk.Frame.
+        self.text = ["Ceci est un texte ", "d'initiliasation r e a e ra zer  zeae r aze rar "]
+
+        self.tkmaster = tk_master
+        self.tkmaster.title("Mon éditeur spécialisé")
+        self.tkframe = tk.Frame(self.tkmaster)  # Premier objet tk.Frame.
 
         self.frame_top = tk.Frame(self.tkframe)
         self.frame_top.pack(side="top")
         self.frame_bottom = tk.Frame(self.tkframe)
         self.frame_bottom.pack(side="top")
 
+        # Créer un bouton d'action
+        self.button_action_1 = tk.Button(self.frame_bottom, text = "Traitement1" , command = self.traitement1)
+        self.button_action_1.pack()
+
         # Créer un bouton quitter
-        self.button_quit = tk.Button(self.frame_bottom, text="Quitter", command=master.quit)
+        self.button_quit = tk.Button(self.frame_bottom, text="Quitter", command=tk_master.quit)
         self.button_quit.pack()
 
         # Créer un bouton Ouvrir
@@ -39,15 +45,19 @@ class MapApp():  # Ne dérive pas de Tkinter
         self.button_open.pack()
 
         # Une entrée en haut
-        self.files_entry = tk.Entry(self.frame_top)
-        self.files_entry.pack(side='left')
+        self.text_area = tk.Text(self.frame_top, height=20, width=30)
+        # self.text_entry.place(height=20, width=30)
+        self.text_area.pack(side='left')
 
-        if self.files :
-            for line in self.files:
-                self.files_entry.insert(tk.END, str(line) + "\n\n")
+        # if self.files :
+        #     for line in self.files:
+        #         self.files_entry.insert(tk.END, str(line) + "\n\n")
+
+        for line in self.text:
+            self.text_area.insert(tk.END, str(line) + "\n\n")
 
         # Créer une barre pour menu déroulant et y insérer des menus.
-        menu_bar = tk.Menu(master)
+        menu_bar = tk.Menu(tk_master)
 
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="Ouvrir un fichier...", command=self.ouvrir_fichier)
@@ -57,7 +67,7 @@ class MapApp():  # Ne dérive pas de Tkinter
         menu_bar.add_cascade(label="Fichier", menu=file_menu)
 
         # Configurer la fenêtre principale pour utiliser la barre de menus
-        self.master.config(menu=menu_bar)
+        self.tkmaster.config(menu=menu_bar)
 
         self.tkframe.pack()
 
@@ -67,6 +77,10 @@ class MapApp():  # Ne dérive pas de Tkinter
         with open(path, "r") as f:
             text = f.read()
         print(text)
+
+    def traitement1(self):
+        txt = self.text_area.selection_get()
+        print(txt)
 
 
 if __name__ == '__main__':
@@ -84,6 +98,6 @@ if __name__ == '__main__':
         print("Pas de fichier")
 
     root = tk.Tk()
-    root.geometry("400x200")
+    root.geometry("400x400")
     app = MapApp(root, files=all_files )
     root.mainloop()
